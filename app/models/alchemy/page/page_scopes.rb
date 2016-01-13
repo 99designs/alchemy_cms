@@ -34,10 +34,6 @@ module Alchemy
       #
       scope :visible, -> { where(visible: true) }
 
-      # All public pages
-      #
-      scope :published, -> { where(public: true) }
-
       # All not restricted pages
       #
       scope :not_restricted, -> { where(restricted: false) }
@@ -99,6 +95,33 @@ module Alchemy
       # All pages for xml sitemap
       #
       scope :sitemap, -> { from_current_site.published.contentpages.where(sitemap: true) }
+    end
+
+    module ClassMethods
+
+      # All public pages
+      #
+      def published
+        current_time = Time.current
+
+        where([
+          "#{table_name}.public_on <= ? AND".freeze,
+          "(#{table_name}.public_until IS NULL".freeze,
+          "OR #{table_name}.public_until >= ?)".freeze
+        ].join(' '.freeze), current_time, current_time)
+      end
+
+      # All not public pages
+      #
+      def not_public
+        current_time = Time.current
+
+        where([
+          "#{table_name}.public_on IS NULL OR".freeze,
+          "#{table_name}.public_on >= ? OR".freeze,
+          "#{table_name}.public_until <= ?".freeze
+        ].join(' '.freeze), current_time, current_time)
+      end
     end
   end
 end
