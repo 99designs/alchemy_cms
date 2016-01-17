@@ -8,6 +8,10 @@ module Alchemy
       already_public_for?(current_time) && still_public_for?(current_time)
     end
 
+    def expiration_time
+      public_until? ? public_until - Time.current : 0
+    end
+
     def taggable?
       definition['taggable'] == true
     end
