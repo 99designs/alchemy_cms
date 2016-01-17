@@ -4,13 +4,22 @@
     label: page_layout_label(@page),
     include_blank: false,
     input_html: {class: 'alchemy_selectbox'} %>
+  <div class="input">
+    <label class="control-label"><%= _t(:public_available) %></label>
+    <div class="control-group input-row">
+      <div class="input-column">
+        <%= label :page, :public_on, _t(:from) %>
+        <%= alchemy_datepicker @page, :public_on, type: :datetime %>
+      </div>
+      <div class="input-column">
+        <%= label :page, :public_until, _t(:until) %>
+        <%= alchemy_datepicker @page, :public_until, type: :datetime %>
+      </div>
+    </div>
+  </div>
   <div class="input check_boxes">
     <label class="control-label"><%= _t(:page_status) %></label>
     <div class="control_group">
-      <label class="checkbox">
-        <%= f.check_box :public_on, {checked: @page.public?}, Time.current %>
-        <%= f.object.class.human_attribute_name :public %>
-      </label>
       <label class="checkbox">
         <%= f.check_box :visible %>
         <%= f.object.class.human_attribute_name :visible %>
